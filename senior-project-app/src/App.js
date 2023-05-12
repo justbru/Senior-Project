@@ -5,13 +5,25 @@ import logo from "./logo.png"
 import axios from "axios"
 const APIKey = "58b2173eeafc4b949777f54ec8ea6e76"
 
-// Set AssemblyAI Axios Header
+// // Set AssemblyAI Axios Header
+// const assemblyAI = axios.create({
+//   baseURL: "https://api.assemblyai.com/v2",
+//   headers: {
+//     authorization: APIKey,
+//     "content-type": "application/json",
+//     "transfer-encoding": "chunked",
+//   },
+// })
+
 const assemblyAI = axios.create({
   baseURL: "https://api.assemblyai.com/v2",
+  summarization: true,
+  summary_model: "informative",
+  summary_type: "bullets",
   headers: {
     authorization: APIKey,
     "content-type": "application/json",
-    "transfer-encoding": "chunked",
+    //"transfer-encoding": "chunked",
   },
 })
 
@@ -56,7 +68,7 @@ const App = () => {
 
   // States
   const [uploadURL, setUploadURL] = useState("")
-  const [transcriptID, setTranscriptID] = useState("")
+  //const [transcriptID, setTranscriptID] = useState("")
   const [transcriptData, setTranscriptData] = useState("")
   const [transcript, setTranscript] = useState("")
   const [isLoading, setIsLoading] = useState(false)
@@ -71,40 +83,90 @@ const App = () => {
     }
   }, [audioFile])
 
-  // Submit the Upload URL to AssemblyAI and retrieve the Transcript ID
-  const submitTranscriptionHandler = () => {
-    assemblyAI
-      .post("/transcript", {
-        audio_url: uploadURL,
-      })
-      .then((res) => {
-        setTranscriptID(res.data.id)
+  // // Submit the Upload URL to AssemblyAI and retrieve the Transcript ID
+  // const submitTranscriptionHandler = async () => {
+  //   await assemblyAI
+  //     .post("/transcript", {
+  //       audio_url: uploadURL,
+  //     })
+  //     .then((res) => {
+  //       setTranscriptID(res.data.id)
 
-        checkStatusHandler()
-      })
-      .catch((err) => console.error(err))
+  //       checkStatusHandler()
+  //     })
+  //     .catch((err) => console.error(err))
+  // }
+
+  // // Check the status of the Transcript
+  // const checkStatusHandler = async () => {
+  //   setIsLoading(true)
+  //   if (transcriptID.length != 0) {
+  //     try {
+  //       await assemblyAI.get(`/transcript/${transcriptID}`).then((res) => {
+  //         setTranscriptData(res.data)
+  //       })
+  //     } catch (err) {
+  //       console.error(err)
+  //     }
+  //   }
+  // }
+
+  const base_url = 'https://api.assemblyai.com/v2'
+
+  const headers = {
+    authorization: APIKey
   }
 
-  // Check the status of the Transcript
-  const checkStatusHandler = async () => {
+  const data = {
+    audio_url: uploadURL,
+    summarization: true,
+    summary_model: 'conversational',
+    speaker_labels: true,
+    summary_type: 'bullets'
+  }
+
+  const submitForSummary = async () => {
+    const url = base_url + '/transcript'
+    const response = await axios.post(url, data, { headers: headers })
+
+    const transcriptId = response.data.id
+    const pollingEndpoint = `https://api.assemblyai.com/v2/transcript/${transcriptId}`
+    console.log(response.data.id)
+
     setIsLoading(true)
-    try {
-      await assemblyAI.get(`/transcript/${transcriptID}`).then((res) => {
-        setTranscriptData(res.data)
+
+    while (true) {
+      const pollingResponse = await axios.get(pollingEndpoint, {
+        headers: headers
       })
-    } catch (err) {
-      console.error(err)
+      const transcriptionResult = pollingResponse.data
+
+      if (transcriptionResult.status === 'completed') {
+        setTranscriptData(transcriptionResult)
+        const summary = transcriptionResult.summary || ''
+        console.log('Transcription completed!')
+        console.log(`Transcription: ${transcriptionResult.text}`)
+        console.log(`Summary: ${summary}`)
+        break
+      } else if (transcriptionResult.status === 'error') {
+        throw new Error(`Transcription failed: ${transcriptionResult.error}`)
+      } else {
+        await new Promise((resolve) => setTimeout(resolve, 3000))
+      }
     }
   }
+
+
 
   // Periodically check the status of the Transcript
   useEffect(() => {
     const interval = setInterval(() => {
       if (transcriptData.status !== "completed" && isLoading) {
-        checkStatusHandler()
+        //checkStatusHandler()
       } else {
         setIsLoading(false)
-        setTranscript(transcriptData.text)
+        setTranscript(transcriptData.summary)
+        console.log(transcriptData.summary);
 
         clearInterval(interval)
       }
@@ -146,7 +208,7 @@ const App = () => {
       <audio ref={audioPlayer} src={blobURL} controls='controls' />
       <button
         className='btn btn-secondary'
-        onClick={submitTranscriptionHandler}
+        onClick={submitForSummary}
       >
         Submit for Transcription
       </button>
