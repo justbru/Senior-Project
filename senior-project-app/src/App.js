@@ -1,8 +1,14 @@
 import MicRecorder from "mic-recorder-to-mp3"
 import { useEffect, useState, useRef } from "react"
 import { Oval } from "react-loader-spinner"
-import logo from "./logo.png"
+import { createTheme, ThemeProvider } from '@mui/material/styles';
+import { Button, Typography } from "@mui/material"
 import axios from "axios"
+import '@fontsource/roboto/300.css';
+import '@fontsource/roboto/400.css';
+import '@fontsource/roboto/500.css';
+import '@fontsource/roboto/700.css';
+
 const APIKey = "58b2173eeafc4b949777f54ec8ea6e76"
 
 // // Set AssemblyAI Axios Header
@@ -174,66 +180,71 @@ const App = () => {
     return () => clearInterval(interval)
   })
 
-  return (
-    <div className='flex flex-col items-center justify-center mt-10 mb-20 space-y-4'>
-      <h1 className='text-4xl'>React Speech Recognition App 🎧</h1>
-      <h3 className='text-2xl'>
-        Powered by{" "}
-        <a
-          className='text-secondary animate-pulse'
-          href='https://www.assemblyai.com/'
-          target='_blank'
-          rel='noreferrer'
-        >
-          AssemblyAI
-        </a>
-      </h3>
-      <img className='max-h-64' src={logo} alt='logo' />
-      <div>
-        <button
-          className='btn btn-primary'
-          onClick={startRecording}
-          disabled={isRecording}
-        >
-          Record
-        </button>
-        <button
-          className='btn btn-warning'
-          onClick={stopRecording}
-          disabled={!isRecording}
-        >
-          Stop
-        </button>
-      </div>
-      <audio ref={audioPlayer} src={blobURL} controls='controls' />
-      <button
-        className='btn btn-secondary'
-        onClick={submitForSummary}
-      >
-        Submit for Transcription
-      </button>
+  const theme = createTheme({
+    palette: {
+      primary: {
+        main: '#88c5cf'
+      }
+    },
+  });
 
-      {isLoading ? (
+
+  return (
+    <ThemeProvider theme={theme}>
+      <div className='flex flex-col items-center justify-center mt-40 mb-20 space-y-4'>
+        <Typography variant='h2'>
+          Welcome to DocAI
+        </Typography>
+        <Typography align='center' variant="subtitle1">
+          A virtual note-taking assistant for doctor-patient consultations, powered by AssemblyAI
+        </Typography>
         <div>
-          <Oval
-            ariaLabel='loading-indicator'
-            height={100}
-            width={100}
-            strokeWidth={5}
-            color='red'
-            secondaryColor='yellow'
-          />
-          <p className='text-center'>Is loading....</p>
+          <Button
+            color='primary'
+            variant="contained"
+            onClick={startRecording}
+            disabled={isRecording}
+          >
+            Record
+          </Button>
+          <Button
+            variant="contained"
+            onClick={stopRecording}
+            disabled={!isRecording}
+          >
+            Stop
+          </Button>
         </div>
-      ) : (
-        <div></div>
-      )}
-      {!isLoading && transcript && (
-        <div className='w-2/3 lg:w-1/3 mockup-code'>
-          <p className='p-6'>{transcript}</p>
-        </div>
-      )}
-    </div>
+        <audio ref={audioPlayer} src={blobURL} controls='controls' />
+        <Button
+          variant='contained'
+          onClick={submitForSummary}
+        >
+          Submit for Transcription
+        </Button>
+
+        {isLoading ? (
+          <div>
+            <Oval
+              ariaLabel='loading-indicator'
+              height={100}
+              width={100}
+              strokeWidth={5}
+              color='blue'
+              secondaryColor='white'
+            />
+            <p className='text-center'>Summarizing your conversation....</p>
+          </div>
+        ) : (
+          <div></div>
+        )}
+        {!isLoading && transcript && (
+          <div className='w-2/3 lg:w-1/3 mockup-code'>
+            <p className='p-6'>{transcript}</p>
+          </div>
+        )}
+      </div>
+    </ThemeProvider>
   )
 }
 
