@@ -70,6 +70,8 @@ export default function AssemblyAI(props) {
                 console.log('Transcription completed!')
                 console.log(`Transcription: ${transcriptionResult.text}`)
                 console.log(`Summary: ${summary}`)
+                props.setIsLoading(false)
+                props.setTranscript(summary)
                 break
             } else if (transcriptionResult.status === 'error') {
                 throw new Error(`Transcription failed: ${transcriptionResult.error}`)

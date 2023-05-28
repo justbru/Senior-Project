@@ -20,14 +20,51 @@ export default function SummaryPage(props) {
                 )}
                 {!props.isLoading && props.transcript && (
                     <Grid item xs={12}>
-                        <Card sx={{ minWidth: 275 }}>
-                            <CardContent>
-                                <Typography align='center' variant='body1'>
+                        <Card sx={{ minWidth: 450, marginTop: -20, marginBottom: 12 }}>
+                            <CardContent >
+                                <Typography margin-bottom="1vh" align='center' variant='body1'>
                                     {props.transcript}
                                 </Typography>
                             </CardContent>
                         </Card>
+                        <Card sx={{ minWidth: 275 }}>
+                            <CardContent>
+                                <Typography align='left' variant='body1'>
+                                    S:
+                                </Typography>
+                            </CardContent>
+                        </Card>
+                        <Card sx={{ minWidth: 275, marginTop: 1 }}>
+                            <CardContent>
+                                <Typography align='left' variant='body1'>
+                                    O:
+                                </Typography>
+                            </CardContent>
+                        </Card>
+                        <Card sx={{ minWidth: 275, marginTop: 1 }}>
+                            <CardContent>
+                                <Typography align='left' variant='body1'>
+                                    A:
+                                </Typography>
+                            </CardContent>
+                        </Card>
+                        <Card sx={{ minWidth: 275, marginTop: 1 }}>
+                            <CardContent>
+                                <Typography align='left' variant='body1'>
+                                    P:
+                                </Typography>
+                            </CardContent>
+                        </Card>
                     </Grid>
+                )}
+                {!props.transcript && !props.isLoading && (
+                    <Card sx={{ minWidth: 275, marginTop: 1 }}>
+                        <CardContent>
+                            <Typography align='center' variant='body1'>
+                                No speech detected. Try again
+                            </Typography>
+                        </CardContent>
+                    </Card>
                 )}
             </Grid>
         </Grid>
