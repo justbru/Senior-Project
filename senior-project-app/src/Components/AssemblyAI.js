@@ -76,7 +76,7 @@ export default function AssemblyAI(props) {
             } else if (transcriptionResult.status === 'error') {
                 throw new Error(`Transcription failed: ${transcriptionResult.error}`)
             } else {
-                await new Promise((resolve) => setTimeout(resolve, 3000))
+                await new Promise((resolve) => setTimeout(resolve, 30000))
             }
         }
     }
