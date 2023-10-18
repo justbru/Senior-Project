@@ -1,6 +1,6 @@
 import { useState } from "react"
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-import { Fade, Box } from "@mui/material"
+import { Box } from "@mui/material"
 import '@fontsource/roboto/300.css';
 import '@fontsource/roboto/400.css';
 import '@fontsource/roboto/500.css';

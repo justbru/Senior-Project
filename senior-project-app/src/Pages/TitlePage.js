@@ -2,7 +2,7 @@ import { Grid, Button, Typography } from "@mui/material"
 
 export default function TitlePage(props) {
     return (
-        <Grid container rowSpacing={5} xs={12} display="flex" justifyContent="center" alignItems="center">
+        <Grid container rowSpacing={5} display="flex" justifyContent="center" alignItems="center">
             <Grid item xs={12}>
                 <Typography align='center' variant='h1' color='white'>
                     Welcome to DocAI
@@ -24,3 +24,4 @@ export default function TitlePage(props) {
         </Grid>
     );
 }
+

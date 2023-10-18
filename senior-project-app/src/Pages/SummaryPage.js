@@ -1,5 +1,5 @@
 import { Card, CardContent, Grid, CircularProgress, Typography } from "@mui/material"
-import { useState, useEffect } from 'react';
+import { useEffect } from 'react';
 import Classifier from 'ml-classify-text'
 const classifier = new Classifier()
 
