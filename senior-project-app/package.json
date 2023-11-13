@@ -16,7 +16,6 @@
     "brain.js": "^1.6.1",
     "brainjs": "^0.7.4",
     "daisyui": "^2.51.6",
-    "gl": "^6.0.2",
     "gyp": "^0.5.0",
     "mic-recorder-to-mp3": "^2.2.2",
     "ml-classify-text": "^2.0.1",
@@ -28,8 +27,8 @@
     "web-vitals": "^2.1.4"
   },
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
+    "start": "export SET NODE_OPTIONS=--openssl-legacy-provider && react-scripts start",
+    "build": "export SET NODE_OPTIONS=--openssl-legacy-provider && react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
