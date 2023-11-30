@@ -11,8 +11,8 @@ const APIKey = "58b2173eeafc4b949777f54ec8ea6e76"
 const assemblyAI = axios.create({
     baseURL: "https://api.assemblyai.com/v2",
     summarization: true,
-    summary_model: "informative",
-    summary_type: "bullets",
+    summary_model: "conversational",
+    summary_type: "bullets_verbose",
     headers: {
         authorization: APIKey,
         "content-type": "application/json",
@@ -34,7 +34,7 @@ export default function AssemblyAI(props) {
         summarization: true,
         summary_model: 'conversational',
         speaker_labels: true,
-        summary_type: 'bullets'
+        summary_type: 'bullets_verbose'
     }
 
     // Upload the Audio File and retrieve the Upload URL
@@ -72,6 +72,7 @@ export default function AssemblyAI(props) {
                 console.log(`Summary: ${summary}`)
                 props.setIsLoading(false)
                 props.setTranscript(summary)
+                props.setTranscript_original(transcriptionResult.text)
                 break
             } else if (transcriptionResult.status === 'error') {
                 throw new Error(`Transcription failed: ${transcriptionResult.error}`)

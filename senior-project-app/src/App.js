@@ -15,6 +15,8 @@ const App = () => {
   const [isLoading, setIsLoading] = useState(false)
   const [ranAI, setRanAI] = useState(false)
   const [transcript, setTranscript] = useState("")
+  const [transcript_original, setTranscript_original] = useState("")
+
 
   const theme = createTheme({
     palette: {
@@ -30,8 +32,8 @@ const App = () => {
         {onTitle
           ? <TitlePage onTitle={onTitle} setOnTitle={setOnTitle} />
           : (!ranAI
-            ? <TrialPage setRanAI={setRanAI} setTranscript={setTranscript} isLoading={isLoading} setIsLoading={setIsLoading} />
-            : <SummaryPage transcript={transcript} isLoading={isLoading} />
+            ? <TrialPage setRanAI={setRanAI} setTranscript={setTranscript} setTranscript_original={setTranscript_original} isLoading={isLoading} setIsLoading={setIsLoading} />
+            : <SummaryPage transcript={transcript} isLoading={isLoading} transcript_original={transcript_original} />
           )
         }
       </Box>
