@@ -3,9 +3,11 @@ import { useEffect, useState } from 'react';
 import Classifier from 'ml-classify-text'
 import { motion, AnimatePresence } from 'framer-motion';
 const classifier = new Classifier()
+const classifierNumerical = new Classifier()
 
 
 const subjective = [
+    'jenny',
     'has been having headaches for about four months',
     'The patient explained to me that he has been feeling much better since his last office visit',
     'complains of knee pain',
@@ -95,6 +97,7 @@ const subjective = [
     'They talk about their morning puking routine.',
     'The will to get the property is in storage and the title was due yesterday',
     'has been having headaches for about four months',
+    'Jenny has been having really, really bad headaches for about six months now'
 
 
 ]
@@ -115,7 +118,7 @@ const objective = [
     'looks like you are 145 pounds, five foot eight',
     'The doctor checks the physical exam of the knee and finds it swollen, painful, and red.',
     'The fever is gone but she still feels a bit warm.',
-    ' - During the physical exam, the doctor examines the hands, arms, and wrists',
+    'During the physical exam, the doctor examines the hands, arms, and wrists',
     'Speaker A asks Speaker A to do some tests',
     'Speaker A does both knees and knees backwards, and Speaker A points the toes to the ceiling',
     'The right arm has some redness and reduced supination.',
@@ -126,6 +129,18 @@ const objective = [
     'The doctor also checks the lipid panel and reminds the patient to check a lipid panel again.',
     'All the tests were normal'
 
+]
+
+const objectiveNumerical = [
+    'Looks like you\'re 185 pounds, six foot three inches',
+    '19 years old',
+    'Blood pressure 180 over 40',
+    'blood pressure',
+    'Okay, it looks like your sugar content is good too',
+    'patient is 180 pounds s six foot two inches',
+    'Blood pressure came in at 120 over 80',
+    'herpes and chlamydia tests from last visit both came in as false',
+    'looks like you are 145 pounds, five foot eight'
 ]
 
 const assessment = [
@@ -200,6 +215,8 @@ classifier.train(objective, 'objective')
 classifier.train(assessment, 'assessment')
 classifier.train(plan, 'plan')
 
+classifierNumerical.train(objectiveNumerical, 'objective')
+
 let categorizedText = 0
 let categorizedText_original = 0
 
@@ -213,7 +230,7 @@ export default function SummaryPage(props) {
     const [unclassified, setUnclassified] = useState("")
 
     const onCopy = () => {
-        const text = "Subjective: " + output_s + "\n\nObjective: " + output_o + "\n\nAction: " + output_a + "\n\nPlan: " + output_p
+        const text = "Subjective: " + output_s + "\n\nObjective: " + output_o + "\n\nAssessment: " + output_a + "\n\nPlan: " + output_p
 
         // Copy the text inside the text field
         navigator.clipboard.writeText(text);
@@ -268,7 +285,7 @@ export default function SummaryPage(props) {
             const splitTranscript = props.transcript_original.split(regex);
             if (splitTranscript.length) {
                 splitTranscript.forEach((sentence) => {
-                    let predictions = classifier.predict(sentence)
+                    let predictions = classifierNumerical.predict(sentence)
                     if (predictions.length) {
                         if (predictions[0].label === "objective")
                             tempOutputO += sentence + ". "
@@ -353,7 +370,7 @@ export default function SummaryPage(props) {
                             </Card>
                             <Card>
                                 <CardHeader className="bg-brown-50">
-                                    Action
+                                    Assessment
                                 </CardHeader>
                                 <CardBody>
                                     <Textarea
